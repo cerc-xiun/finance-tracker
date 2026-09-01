@@ -1,0 +1,17 @@
+# Python temporary bytecode 
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments 
+venv/
+.venv/
+env/
+
+# Secret Database Credentials
+.env
+
+# Windows /OS junk files
+.DS_Store
+Thumbs.db
+
