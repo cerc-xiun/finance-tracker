@@ -6,8 +6,8 @@ from enum import StrEnum, auto
 app = Flask(__name__)
 
 class Transaction_Type(StrEnum):
-    INCOME = auto()
-    EXPENSE = auto()
+    INCOME = "income"
+    EXPENSE = "expense"
 
 @app.route("/finance_tracker", methods=['POST'])
 def insert_record_route():
@@ -28,6 +28,7 @@ def insert_record_route():
         return jsonify({"error" : f"Missing Fields: {err}"}), 400
 
     if result := insert_record(
+                    valid_types=Transaction_Type,
                     type=data.get("type").strip().lower(),
                     amount=data.get("amount"),
                     category=data.get('category').strip().lower(),
@@ -60,7 +61,7 @@ def update_record_route(id):
     if amount is None and description is None and logged_at is None:
         return jsonify({"error" : "There's nothing to be updated in the specified record"}), 400
 
-    if result := update_record(id=id,type=type, amount=amount, description=description, logged_at=logged_at):
+    if result := update_record(valid_types=Transaction_Type, id=id,type=type, amount=amount, description=description, logged_at=logged_at):
         return jsonify(result), 200
     else:
         return jsonify(result), 422
@@ -73,7 +74,7 @@ def delete_record_route(id):
     if not type:
         return jsonify({"error" : "Missing type (income or expense)"}), 400
     
-    if result := delete_record(id=id, type=type):
+    if result := delete_record(valid_types=Transaction_Type, id=id, type=type):
         return jsonify(result), 200
     else:
         return jsonify(result), 404

@@ -2,6 +2,7 @@ import psycopg, dotenv
 import os
 
 dotenv.load_dotenv()
+
 DB=os.getenv("DB_NAME")
 USER=os.getenv("DB_USER")
 PASSWORD=os.getenv("DB_PASSWORD")
@@ -31,21 +32,9 @@ def init_db():
     """)
 
     cursor.execute("""
-        CREATE TABLE IF NOT EXISTS expenses(
+        CREATE TABLE IF NOT EXISTS transactions(
             id SERIAL PRIMARY KEY,
-            amount NUMERIC(10,2) NOT NULL,
-            description TEXT,
-            category_id INTEGER NOT NULL,
-            logged_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-            created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-
-            FOREIGN KEY (category_id) REFERENCES categories(id)
-        )
-    """)
-
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS income(
-            id SERIAL PRIMARY KEY,
+            type VARCHAR(10) NOT NULL CHECK (type IN ('income', 'expense')),
             amount NUMERIC(10,2) NOT NULL,
             description TEXT,
             category_id INTEGER NOT NULL,
