@@ -19,7 +19,7 @@ def insert_record(valid_types: type[StrEnum], type: str, amount: float, category
                     return {"error" : "Could not create or retrieve category."}
             
             cursor.execute(f"""
-                                INSERT INTO transactions (type, amount, description, category_id, logged_at) VALUES (%s, %s, %s, %s, %s)
+                                INSERT INTO transactions (type, amount, description, category_id, logged_at) VALUES (%s, %s, %s, %s, COALESCE(%s, CURRENT_TIMESTAMP))
                             """
                             , (type, amount, description, category_id, logged_at))
             
