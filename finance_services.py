@@ -36,27 +36,26 @@ def get_transactions(category: str=None):
             cursor = conn.cursor()
 
             if category is None:
-
-                cursor.execute("""  SELECT id, type, amount, description, category_id, logged_at, created_at
-                                    FROM transactions
-                                """)
-
+                cursor.execute("""
+                    SELECT t.id, t.type, t.amount, t.description, t.category_id, c.name AS category, t.logged_at, t.created_at
+                    FROM transactions t
+                    LEFT JOIN categories c ON t.category_id = c.id
+                    ORDER BY t.logged_at DESC, t.id DESC
+                """)
                 records = cursor.fetchall()
                 return records
-            
             else:
-
                 category_id = _get_category_id(cursor, category)
                 if category_id is None:
                     return []
                 
                 cursor.execute("""
-                                SELECT id, type, amount, description, category_id, logged_at, created_at
-                                FROM transactions  
-                                WHERE category_id = %s
-                                """, 
-                                (category_id,))
-
+                    SELECT t.id, t.type, t.amount, t.description, t.category_id, c.name AS category, t.logged_at, t.created_at
+                    FROM transactions t
+                    LEFT JOIN categories c ON t.category_id = c.id
+                    WHERE t.category_id = %s
+                    ORDER BY t.logged_at DESC, t.id DESC
+                """, (category_id,))
                 records = cursor.fetchall()
                 return records
             
