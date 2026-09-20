@@ -1,5 +1,6 @@
+from sys import meta_path
 from database import init_db
-from finance_services import insert_record, get_transactions, update_record, delete_record
+from finance_services import insert_record, get_transactions, update_record, delete_record, get_summary
 from flask import Flask, request, jsonify
 from enum import StrEnum, auto
 
@@ -32,8 +33,8 @@ def insert_record_route():
                     type=data.get("type").strip().lower(),
                     amount=data.get("amount"),
                     category=data.get('category').strip().lower(),
-                    logged_at=data.get("logged_at").strip() if data.get("logged_at") else None,
-                    description=data.get("description").strip() if data.get("description") else None
+                    logged_at=(data.get("logged_at") or "").strip() or None,
+                    description=(data.get("description") or "").strip() or None
                     ):
         
         return jsonify(result), 201
@@ -46,6 +47,11 @@ def insert_record_route():
 def transaction_list_route():
         
         return jsonify(get_transactions(category=request.args.get("category"))), 200
+
+@app.route("/finance_tracker/summary", methods=["GET"])
+def get_summary_route():
+    category = (request.args.get("category") or "").strip() or None
+    return jsonify({"summary" : get_summary(category=category)}), 200
 
 @app.route("/finance_tracker/<int:id>", methods=['PATCH'])
 def update_record_route(id):

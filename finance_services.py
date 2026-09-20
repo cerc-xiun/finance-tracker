@@ -62,7 +62,38 @@ def get_transactions(category: str=None):
             
     except Error as e:
         return {"error" : f"Database error: {str(e)}"}
-    
+
+def get_summary(category: str=None):
+    try:
+        with db_connect() as conn:
+            cursor = conn.cursor()
+            if category is None:
+                cursor.execute("""
+                                    SELECT
+                                        COALESCE(SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END), 0) as total_income,
+                                        COALESCE(SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END), 0) as total_expenses,
+                                        COALESCE(SUM(CASE WHEN type = 'income' THEN amount ELSE -amount END), 0) as net_savings
+                                    FROM transactions
+                                """)
+                return cursor.fetchone()
+            else:
+                category_id = _get_category_id(cursor, category)
+                
+                if category_id is None:
+                    return {"error" : "Invalid Category"}
+
+                cursor.execute("""
+                                    SELECT
+                                        COALESCE(SUM(CASE WHEN type = 'income' THEN amount ELSE 0 END), 0) as total_income,
+                                        COALESCE(SUM(CASE WHEN type = 'expense' THEN amount ELSE 0 END), 0) as total_expenses,
+                                        COALESCE(SUM(CASE WHEN type = 'income' THEN amount ELSE -amount END), 0) as net_savings
+                                    FROM transactions
+                                    WHERE category_id = %s
+                                """, (category_id,))
+
+                return cursor.fetchone()
+    except Error as e:
+        return {"error" : f"Database error: {str(e)}"}   
 
 def update_record(valid_types: type[StrEnum], id: int, type: str, amount: float=None, description: str=None, logged_at: str=None):
     if type not in [t.value for t in valid_types]:
