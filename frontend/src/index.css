@@ -1,0 +1,206 @@
+/* ---Global Reset--- */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ---Lock html, body, root to exactly one viewport--- */
+html,
+body,
+#root {
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+  background: #6C1A1A;
+}
+
+/* ---Wireframe placeholder colors--- */
+.wf-teal {
+  background: #31AAA9;
+}
+
+.wf-sand {
+  background: #F8E0A4;
+}
+
+.wf-crimson {
+  background: #A82020;
+}
+
+.wf-maroon {
+  background: #6C1A1A;
+}
+
+.wf-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.05rem;
+  border: 1px dashed rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+}
+
+/* ---App shell: one viewport-tall column (header on top, body below)--- */
+.app-shell {
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+}
+
+/* ---Top row (3 metric cards), never shrink(~120px)--- */
+.metrics-row {
+  display: flex;
+  flex: 0 0 120px;
+  gap: 12px;
+}
+
+.metrics-row .wf-box {
+  flex: 1;
+}
+
+/* ---Desktop (>=1024): 2 column split, Left = 400px (Chart + Form), Right = 1fr(feed)--- */
+.body-grid {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  gap: 12px;
+}
+
+.left-col {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.left-col .wf-box {
+  flex: 1 1 0;
+  min-height: 0;
+}
+
+.right-col {
+  display: flex;
+  min-height: 0;
+  height: 100%;
+}
+
+.right-col .wf-box {
+  flex: 1;
+  height: 100%;
+}
+
+/* ---Mobile (< 1024px): stacked, flexible layout--- */
+.body-stacked {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+}
+
+.body-stacked .left-col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.body-stacked .left-col .wf-box {
+  min-height: 200px;
+  flex: 0 0 200px;
+}
+
+.body-stacked .right-col {
+  min-height: 300px;
+  flex: 0 0 300px;
+}
+
+.body-stacked .right-col .wf-box {
+  height: 100%;
+}
+
+.stat-card {
+  flex: 1;
+  min-width: 0;
+  background: rgba(31, 20, 20);
+  border-radius: 16px;
+  padding: 16px 22px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  color: #F8E0A4;
+
+  border: 1px solid rgba(108, 26, 26, 0.4);
+  box-shadow:
+    3px 6px 8px rgba(0, 0, 0, 0.7),
+    inset -2px -2px 10px rgba(0, 0, 0, 0.4);
+}
+
+.stat-card__info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.stat-card__label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #F8E0A4;
+  opacity: 0.75;
+}
+
+.stat-card__amount {
+  font-size: clamp(1.6rem, 2.2vw, 2.2rem);
+  font-weight: 800;
+  line-height: 1;
+  color: #F8E0A4;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Figma Ghost Outline Badges */
+.stat-badge {
+  padding: 3px 10px;
+  border-radius: 8px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: transparent;
+}
+
+.stat-badge--income {
+  border: 1px solid #31AAA9;
+  color: #31AAA9;
+  background: rgba(57, 202, 198, 0.144);
+}
+
+.stat-badge--expense {
+  border: 1px solid #A82020;
+  color: #A82020;
+  background: rgba(168, 32, 32, 0.151);
+}
+
+.stat-badge--surplus {
+  border: 1px solid #F8E0A4;
+  color: #F8E0A4;
+  background: rgba(255, 210, 58, 0.171);
+}
+
+.stat-badge--deficit {
+  border: 1px solid #A82020;
+  color: #A82020;
+}
